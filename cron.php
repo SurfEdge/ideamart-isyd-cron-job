@@ -19,16 +19,22 @@ request('https://sv2.ideamarthosting.dialog.lk/APP_NAME/controller.php', 'onthis
 request('ANY_URL', 'quote_of_the_day');
 request('https://sv2.ideamarthosting.dialog.lk/APP_NAME/controller.php', 'daily_news', '20:00');
 
+request('https://sv2.ideamarthosting.dialog.lk/APP_NAME/controller.php', 'weekly_winners', '20:00','Sun'); // Runs only on sundays at 8PM
+
 // Logging
 $executionEndTime = microtime(true);
 $seconds = round($executionEndTime - $executionStartTime, 3);
 echo "CRON RAN AT $data took $seconds seconds";
 flog('cron_access', $date . ' > ' . $seconds);
 
-function request($url, $name, $run_at = null)
+function request($url, $name, $run_at = null, $has_date = null)
 {
     // There might be instance where you want to run an endpoint in a specific point in time of the day
     if($run_at && date('H:i', time()) != $run_at ){
+        return;
+    }
+    // Check if its the day of the week
+    if($has_date && date('D') != $has_date){
         return;
     }
 
